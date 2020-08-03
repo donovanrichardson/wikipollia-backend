@@ -1,7 +1,7 @@
 const Article = require('../models/Article')
 const Vote = require('../models/Vote')
 
-exports.articleByName = name=>{
+const articleByName = name=>{
     return Article.findOneAndUpdate({title:name},{},{
         new:true,
         upsert:true
@@ -13,7 +13,7 @@ exports.articleByName = name=>{
     })
 }
 
-exports.vote = obj =>{
+const vote = obj =>{
     let voteDoc;
     return articleByName(obj.article).then(a=>{
         obj.article = a._id
@@ -26,12 +26,19 @@ exports.vote = obj =>{
         a2.votes.push(voteDoc._id)
         // console.log(a2);
         return a2.save()
+    }).then(saved=>{
+        return articleScore(saved.title)
+    }).then(score=>{
+        return{
+            article:score,
+            vote:voteDoc
+        }
     }).catch(err=>{
         console.error(err);
     })
 }
 
-exports.allArticles = () =>{
+const allArticles = () =>{
     return Article.find().then(a=>{
         return a.map(article=>article.title)
     }).catch(err=>{
@@ -39,18 +46,28 @@ exports.allArticles = () =>{
     })
 }
 
-exports.articleScore = name =>{
-    return articleByName(name).then(a=>{
-        return a.populate('votes')
-    }).then(populated=>{
-        const score = populated.votes.reduce((total, cur)=>{
-            return cur ? total+1 : total-1
-        }, 0)
-        return {title:populated.title,
-        score:score}
-    }).catch(err=>{
+//make sure this works when there is no article by the name
+const articleScore = async name =>{
+    let article
+    try{
+        article = await Article.findOne({title:name}).populate('votes')
+    }catch(err){
         console.error(err);
-    })
+    }
+
+    if(!article){
+        return {title:name,
+            score:'article not in database'}
+    }else{
+        console.log(article);
+        const score = article.votes.reduce((total, cur)=>{
+            const addsub = cur.up ? total+1 : total-1
+            console.log(addsub);
+            return addsub
+        }, 0)
+        return {title:article.title,
+        score:score}
+    }
 }
 
 // articleByName("Wikipedia").then(a=>{
@@ -69,3 +86,5 @@ exports.articleScore = name =>{
 /* articleScore('Wiktionary').then(score=>{
     console.log(score)
 }) */
+
+module.exports = {articleByName, vote, articleScore, allArticles}

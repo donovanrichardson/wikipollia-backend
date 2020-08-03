@@ -37,6 +37,13 @@ app.use(express.json()); //Turns JSON from post/put/patch requests and converts 
 app.use(morgan("dev")); // Enables Morgan logging, creating more useful terminal logs while server runs
 app.use(express.static("public")); //Allows static serving of files from public folder
 
+//routes
+const articleRouter = require('./routes/articleRouter')
+const voteRouter = require('./routes/voteRouter')
+
+app.use('/article',articleRouter)
+app.use('/vote',voteRouter)
+
 app.get('/',(req, res)=>{
     res.send({hello:'world'})
 })
