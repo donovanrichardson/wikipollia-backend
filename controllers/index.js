@@ -1,7 +1,7 @@
 const Article = require('../models/Article')
 const Vote = require('../models/Vote')
 
-const articleByName = name=>{
+exports.articleByName = name=>{
     return Article.findOneAndUpdate({title:name},{},{
         new:true,
         upsert:true
@@ -13,7 +13,7 @@ const articleByName = name=>{
     })
 }
 
-const vote = obj =>{
+exports.vote = obj =>{
     let voteDoc;
     return articleByName(obj.article).then(a=>{
         obj.article = a._id
@@ -31,7 +31,7 @@ const vote = obj =>{
     })
 }
 
-const allArticles = () =>{
+exports.allArticles = () =>{
     return Article.find().then(a=>{
         return a.map(article=>article.title)
     }).catch(err=>{
@@ -39,7 +39,7 @@ const allArticles = () =>{
     })
 }
 
-const articleScore = name =>{
+exports.articleScore = name =>{
     return articleByName(name).then(a=>{
         return a.populate('votes')
     }).then(populated=>{
@@ -66,6 +66,6 @@ const articleScore = name =>{
     console.log(a2);
 }) */
 
-articleScore('Wiktionary').then(score=>{
+/* articleScore('Wiktionary').then(score=>{
     console.log(score)
-})
+}) */
