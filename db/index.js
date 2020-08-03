@@ -1,4 +1,5 @@
 const mongoose = require("mongoose"); //bring in mongoose library
+require("dotenv").config(); //reads .env file environmental variables
 const mongoConfigObject = { useNewUrlParser: true, useUnifiedTopology: true }; //Config option to eliminate deprecation warnings
 const mongoURI = process.env.mongoURI + 'wikipollia'
 
@@ -16,7 +17,8 @@ const db = mongoose.connection
 //CONNECTION MESSAGING
 ///////////////////////////
 //Building in messages so we know when our database connection changes
-db.on("error", (err) => console.log(err.message + " is Mongod not running?"));
+// db.on("error", (err) => console.log(err.message + " is Mongod not running?"));
+db.on("error", (err) => console.error(err));
 db.on("connected", () => console.log("mongo connected!"));
 db.on("disconnected", () => console.log("mongo disconnected"));
 
