@@ -4,12 +4,11 @@ const express = require("express"); //Brings in Express Library
 const app = express(); //creates express application object
 const morgan = require("morgan"); //Brings in Morgan Library
 const cors = require("cors"); //Brings in CORS library
-const mongoose = require("mongoose"); //bring in mongoose library
+
 
 //Variables
 const PORT = process.env.PORT; //port number for server as defined in environment variables
 const NODE_ENV = process.env.NODE_ENV; //"development" or "production"
-const mongoURI = process.env.mongoURI + 'wikipollia'
 
 /////////////////////
 // CORS SECURITY CONFIGURATIONS
