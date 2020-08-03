@@ -39,7 +39,7 @@ app.use(morgan("dev")); // Enables Morgan logging, creating more useful terminal
 app.use(express.static("public")); //Allows static serving of files from public folder
 
 app.get('/',(req, res)=>{
-    res.send('hello world')
+    res.send({hello:'world'})
 })
 
 app.listen(PORT, () => {
