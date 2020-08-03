@@ -15,11 +15,11 @@ This is the back end for my WikiPollia app.
 
 ### Exposed
 - /vote: POST adds a new vote
-- /vote/:id: PUT edits a vote
-- /vote/:id: DELETE deletes a vote
-- /vote/:id: GET gets vote by id
+<!-- - /vote/:id: PUT edits a vote -->
+<!-- - /vote/:id: DELETE deletes a vote -->
+<!-- - /vote/:id: GET gets vote by id -->
 - /article/:name/votes : GET gets all votes for an article BY NAME
-- /article/:name: gets: GET gets the score and other details for an article. Mught merge with above method
+- /article/:name: gets: GET gets the score and other details for an article. Might merge with above method
 
 ### not exposed
 - add an article to DB
