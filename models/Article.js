@@ -4,6 +4,9 @@ const articleSchema = new Schema({
     title:{
         type:String,
         required:true},
+    score:{
+        type:Number,
+        default:0},
     votes:[{
         type:Schema.Types.ObjectId,
         ref: 'Vote'}]

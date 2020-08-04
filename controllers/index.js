@@ -24,13 +24,12 @@ const vote = obj =>{
         return Article.findById(v.article)
     }).then(a2=>{
         a2.votes.push(voteDoc._id)
+        voteDoc.up ? a2.score++ : a2.score--
         // console.log(a2);
         return a2.save()
-    }).then(saved=>{
-        return articleScore(saved.title)
-    }).then(score=>{
+    }).then(scored=>{
         return{
-            article:score,
+            article:{title:scored.title,score:scored.score}, //i do this codee 3 times. refactorr!
             vote:voteDoc
         }
     }).catch(err=>{
@@ -39,8 +38,8 @@ const vote = obj =>{
 }
 
 const allArticles = () =>{
-    return Article.find().sort('title').then(a=>{
-        return a.map(article=>article.title)
+    return Article.find({},{title:1,score:1,_id:0}).sort('title').then(a=>{
+        return a
     }).catch(err=>{
         console.error(err);
     })
@@ -48,26 +47,7 @@ const allArticles = () =>{
 
 //make sure this works when there is no article by the name
 const articleScore = async name =>{
-    let article
-    try{
-        article = await Article.findOne({title:name}).populate('votes')
-    }catch(err){
-        console.error(err);
-    }
-
-    if(!article){
-        return {title:name,
-            score:'article not in database'}
-    }else{
-        console.log(article);
-        const score = article.votes.reduce((total, cur)=>{
-            const addsub = cur.up ? total+1 : total-1
-            // console.log(addsub);
-            return addsub
-        }, 0)
-        return {title:article.title,
-        score:score}
-    }
+    return await Article.findOne({title:name},{title:1,score:1,_id:0})
 }
 
 // articleByName("Wikipedia").then(a=>{
