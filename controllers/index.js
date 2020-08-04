@@ -1,5 +1,6 @@
 const Article = require('../models/Article')
 const Vote = require('../models/Vote')
+const axios = require('axios').default;
 
 const articleByName = name=>{
     return Article.findOneAndUpdate({title:name},{},{
@@ -13,28 +14,27 @@ const articleByName = name=>{
     })
 }
 
-const vote = obj =>{
-    let voteDoc;
-    return articleByName(obj.article).then(a=>{
-        obj.article = a._id
-        return Vote.create(obj)
-    }).then(v=>{
-        voteDoc = v;
-        console.log(v);
-        return Article.findById(v.article)
-    }).then(a2=>{
-        a2.votes.push(voteDoc._id)
-        voteDoc.up ? a2.score++ : a2.score--
-        // console.log(a2);
-        return a2.save()
-    }).then(scored=>{
-        return{
-            article:{title:scored.title,score:scored.score}, //i do this codee 3 times. refactorr!
-            vote:voteDoc
+const vote = async obj =>{
+    try{
+        const theArticle = await articleByName(obj.article)
+        let thePage = await axios.get(`https://en.wikipedia.org/w/api.php?action=query&prop=info&format=json&titles=${obj.article}&origin=*`)
+        obj.article = theArticle._id
+        thePage = thePage.data.query.pages
+        const pageid = Object.keys(thePage)[0]
+        obj.oldid = thePage[pageid].lastrevid
+        console.log(obj,'theobject');
+        const voteDoc = await Vote.create(obj)
+        theArticle.votes.push(voteDoc._id)
+        voteDoc.up ? theArticle.score++ : theArticle.score--
+        await theArticle.save()
+        return {
+            title:theArticle.title,
+            score:theArticle.score,
+            oldid:voteDoc.oldid
         }
-    }).catch(err=>{
+    }catch(err){
         console.error(err);
-    })
+    }
 }
 
 const allArticles = () =>{
