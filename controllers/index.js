@@ -39,7 +39,7 @@ const vote = obj =>{
 }
 
 const allArticles = () =>{
-    return Article.find().then(a=>{
+    return Article.find().sort('title').then(a=>{
         return a.map(article=>article.title)
     }).catch(err=>{
         console.error(err);
@@ -62,7 +62,7 @@ const articleScore = async name =>{
         console.log(article);
         const score = article.votes.reduce((total, cur)=>{
             const addsub = cur.up ? total+1 : total-1
-            console.log(addsub);
+            // console.log(addsub);
             return addsub
         }, 0)
         return {title:article.title,

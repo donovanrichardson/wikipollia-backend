@@ -37,11 +37,11 @@ app.use(express.json()); //Turns JSON from post/put/patch requests and converts 
 app.use(morgan("dev")); // Enables Morgan logging, creating more useful terminal logs while server runs
 app.use(express.static("public")); //Allows static serving of files from public folder
 
-// https://stackoverflow.com/a/42463740/9608521
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-     next();
-});
+// // https://stackoverflow.com/a/42463740/9608521
+// app.use(function(req, res, next) {
+//   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+//      next();
+// });
 
 //routes
 const articleRouter = require('./routes/articleRouter')
