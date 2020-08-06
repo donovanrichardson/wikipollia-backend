@@ -7,7 +7,6 @@ const articleByName = name=>{
         new:true,
         upsert:true
     }).then(a=>{
-        // console.log(a);
         return a
     }).catch(err=>{
         console.error(err);
@@ -23,7 +22,6 @@ const vote = async obj =>{
         thePage = thePage.data.query.pages
         const pageid = Object.keys(thePage)[0]
         obj.oldid = thePage[pageid].lastrevid
-        console.log(obj,'theobject');
         const voteDoc = await Vote.create(obj)
         theArticle.votes.push(voteDoc._id)
         voteDoc.up ? theArticle.score++ : theArticle.score--
@@ -40,33 +38,14 @@ const vote = async obj =>{
 
 const allArticles = () =>{
     return Article.find({},{title:1,score:1,_id:0}).sort({'score':-1}).limit(5).then(a=>{
-        console.log(a);
         return a
     }).catch(err=>{
         console.error(err);
     })
 }
 
-//make sure this works when there is no article by the name
 const articleScore = async name =>{
     return await Article.findOne({title:name},{title:1,score:1,_id:0})
 }
-
-// articleByName("Wikipedia").then(a=>{
-//     console.log(a);
-// })
-
-/* vote({
-    up:true,
-    article:'Wiktionary',
-    oldid:1,
-    comment:'cool'
-}).then(a2=>{
-    console.log(a2);
-}) */
-
-/* articleScore('Wiktionary').then(score=>{
-    console.log(score)
-}) */
 
 module.exports = {articleByName, vote, articleScore, allArticles}
