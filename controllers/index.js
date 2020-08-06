@@ -39,7 +39,8 @@ const vote = async obj =>{
 }
 
 const allArticles = () =>{
-    return Article.find({},{title:1,score:1,_id:0}).sort('title').then(a=>{
+    return Article.find({},{title:1,score:1,_id:0}).sort({'score':-1}).limit(5).then(a=>{
+        console.log(a);
         return a
     }).catch(err=>{
         console.error(err);
