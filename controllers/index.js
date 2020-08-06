@@ -17,7 +17,8 @@ const articleByName = name=>{
 const vote = async obj =>{
     try{
         const theArticle = await articleByName(obj.article)
-        let thePage = await axios.get(`https://en.wikipedia.org/w/api.php?action=query&prop=info&format=json&titles=${obj.article}&origin=*`)
+        const encoded = encodeURI(obj.article)
+        let thePage = await axios.get(`https://en.wikipedia.org/w/api.php?action=query&prop=info&format=json&titles=${encoded}&origin=*`)
         obj.article = theArticle._id
         thePage = thePage.data.query.pages
         const pageid = Object.keys(thePage)[0]
