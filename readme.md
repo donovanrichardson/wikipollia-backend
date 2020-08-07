@@ -1,5 +1,5 @@
 # WikiPollia back end
-This is the back end for my WikiPollia app. A wireframe and other planning docs can be found [here](https://git.generalassemb.ly/donovanrichardson/project-2/blob/master/project-worksheet.md)
+This is the back end for my WikiPollia app. A wireframe and other planning docs can be found [here](https://git.generalassemb.ly/donovanrichardson/project-2/blob/master/project-worksheet.md).
 
 ## Models
 - Article

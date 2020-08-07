@@ -7,9 +7,10 @@ const articleSchema = new Schema({
     score:{
         type:Number,
         default:0},
+    pscore:Number,
     votes:[{
         type:Schema.Types.ObjectId,
         ref: 'Vote'}]
-})
+},{timestamps:true})
 
 module.exports = model('Article', articleSchema)

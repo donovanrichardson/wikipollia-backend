@@ -13,6 +13,6 @@ voteSchema = new Schema({
         type:String,
         required:true},
     comment:String
-})
+},{timestamps:true})
 
 module.exports = model('Vote', voteSchema)
