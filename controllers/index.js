@@ -84,7 +84,7 @@ const trending = async () =>{
             // console.log(manyvotes.length);
             const a = manyvotes[i]
             // // console.log('next',a);
-            if (a.votes.length<4){
+            if (a.votes.length<5){
                 a.pscore = 1
                 const saved = await a.save()
                 console.log(saved);
@@ -98,8 +98,10 @@ const trending = async () =>{
                 const half = votediffs.length/2
                 firstHalf = votediffs.slice(0,half)
                 lastHalf = votediffs.slice(half)
-                // console.log('halves', firstHalf, lastHalf);
-                a.pscore = onetailed(firstHalf,lastHalf)
+                console.log('halves', firstHalf, lastHalf);
+                const newscore = onetailed(firstHalf,lastHalf)
+                console.log(newscore);
+                a.pscore = newscore
                 await a.save();
             }
         }
