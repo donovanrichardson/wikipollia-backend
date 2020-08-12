@@ -6,23 +6,21 @@ var ttest = require('ttest');
 const {db }= require('../db');
 const { json } = require('express');
 
-function average(a){
+function sum(a){
     return a.reduce((total, item)=>{
-        return total + (item/a.length)
+        return total + item
     },0)
 }
 
 function onetailed(a, b){
     // console.log('onetailled', a.length, b.length);
     console.log(a,b);
-    const modify = average(a)<average(b)
-    const p = ttest(a,b).pValue()
-    // console.log(p);
-    if(modify){
-        return (2-p)/2
-    }else{
-        return p
-    }
+    // const modify = average(a)<average(b)
+    squaresA= a.map(i=>Math.pow(i,2))
+    squaresB= b.map(i=>Math.pow(i,2))
+    geomeanA = sum(squaresA)/sum(a)
+    geomeanB = sum(squaresB)/sum(b)
+    return geomeanB/geomeanA
 }
 
 const articleByName = name=>{
@@ -76,6 +74,7 @@ const trending = async () =>{
     // console.log('lasttrend', lastTrend);
     if(!lastTrend || Date.now()- lastTrend.updatedAt > 60000){
         const manyvotes = await Article.find().populate('votes')
+        tempstamp = {createdAt:Date.now()}
         
         // console.log(manyvotes);
         // console.log('manyvotes', manyvotes);
@@ -84,15 +83,17 @@ const trending = async () =>{
             // console.log(manyvotes.length);
             const a = manyvotes[i]
             // // console.log('next',a);
-            if (a.votes.length<5){
-                a.pscore = 1
+            const tempvotes = manyvotes[i].votes.map(v=>v);
+            tempvotes.push(tempstamp)
+            if (tempvotes.length<3){
+                a.pscore = Infinity
                 const saved = await a.save()
                 console.log(saved);
             }else{
                 let votediffs = []
-                for(j = 1; j < a.votes.length; j++){
+                for(j = 1; j < tempvotes.length; j++){
                     // console.log('nextvote',a.votes[i]);
-                    votediffs.push(a.votes[j].createdAt - a.votes[j-1].createdAt)
+                    votediffs.push(tempvotes[j].createdAt - tempvotes[j-1].createdAt)
                 }
                 // console.log(votediffs);
                 const half = votediffs.length/2
